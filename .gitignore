@@ -44,3 +44,10 @@ coverage/
 
 # Misc
 .turbo/
+
+# Local debug / ad-hoc test scripts (do not commit)
+*-test.js
+test-*.js
+self-test.js
+query-users.js
+start-server.cmd
