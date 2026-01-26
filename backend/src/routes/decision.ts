@@ -1,16 +1,34 @@
 import { Router, Request, Response } from "express";
 import { prisma } from "../middleware/auth";
 import { AppError } from "../middleware/errorHandler";
+import { logger } from "../utils/logger";
 
 export const decisionRouter = Router();
 
 /**
  * Decision Engine Algorithm:
- * 1. Get today's context (energy, available minutes)
- * 2. Get active goals ranked by priority
- * 3. For each goal, find ready/inbox tasks that fit time constraints
- * 4. Return highest priority task with explanation
+ * 1. Get today's context (energy, available minutes, stress)
+ * 2. Get active goals ranked by importance (max 3)
+ * 3. For each goal, find PENDING tasks that fit available time
+ * 4. Pick highest-priority task from most important goal
+ * 5. Fall back to inbox tasks if no goal tasks fit
+ * 6. Return task with detailed reasoning about selection
  */
+
+interface DecisionContext {
+  date: string;
+  energyLevel: string;
+  availableMinutes: number;
+  stressLevel: number;
+  contextSet: boolean;
+}
+
+interface DecisionInputs {
+  context: DecisionContext;
+  activeGoalCount: number;
+  totalPendingTasks: number;
+  goalTaskCounts: Record<string, number>;
+}
 
 decisionRouter.get("/next", async (req: Request, res: Response) => {
   try {
@@ -19,7 +37,7 @@ decisionRouter.get("/next", async (req: Request, res: Response) => {
     const dateStr = today.toISOString().split('T')[0];
 
     // Get today's context
-    const context = await prisma.dailyContext.findUnique({
+    const contextRecord = await prisma.dailyContext.findUnique({
       where: {
         userId_date: {
           userId: req.userId!,
@@ -28,9 +46,18 @@ decisionRouter.get("/next", async (req: Request, res: Response) => {
       },
     });
 
-    const availableMinutes = context?.availableMinutes || 480; // 8 hours default
-    const energyLevel = context?.energyLevel || "MEDIUM";
-    const stressLevel = context?.stressLevel || 5;
+    const contextSet = !!contextRecord;
+    const availableMinutes = contextRecord?.availableMinutes ?? 480; // 8 hours default
+    const energyLevel = contextRecord?.energyLevel ?? "MEDIUM";
+    const stressLevel = contextRecord?.stressLevel ?? 5;
+
+    const decisionContext: DecisionContext = {
+      date: dateStr,
+      energyLevel,
+      availableMinutes,
+      stressLevel,
+      contextSet,
+    };
 
     // Get active goals ordered by importance
     const goals = await prisma.goal.findMany({
@@ -38,18 +65,57 @@ decisionRouter.get("/next", async (req: Request, res: Response) => {
       orderBy: { importance: "desc" },
     });
 
+    // Count pending tasks per goal
+    const goalTaskCounts: Record<string, number> = {};
+    let totalPendingTasks = 0;
+    
+    for (const goal of goals) {
+      const count = await prisma.task.count({
+        where: { userId: req.userId, goalId: goal.id, status: "PENDING" },
+      });
+      goalTaskCounts[goal.id] = count;
+      totalPendingTasks += count;
+    }
+
+    // Count inbox tasks
+    const inboxTaskCount = await prisma.task.count({
+      where: { userId: req.userId, goalId: null, status: "PENDING" },
+    });
+    totalPendingTasks += inboxTaskCount;
+
+    const inputs: DecisionInputs = {
+      context: decisionContext,
+      activeGoalCount: goals.length,
+      totalPendingTasks,
+      goalTaskCounts,
+    };
+
     if (goals.length === 0) {
       return res.json({
         ok: true,
         data: {
           recommendation: null,
           message: "No active goals. Create a goal to get recommendations.",
+          inputs,
+        },
+      });
+    }
+
+    if (totalPendingTasks === 0) {
+      return res.json({
+        ok: true,
+        data: {
+          recommendation: null,
+          message: "All tasks complete! Add new tasks to continue.",
+          inputs,
         },
       });
     }
 
     let bestTask = null;
     let bestGoal = null;
+    let selectionReason = "";
+    let skippedTasks = 0;
 
     // Iterate through goals by importance
     for (const goal of goals) {
@@ -57,38 +123,53 @@ decisionRouter.get("/next", async (req: Request, res: Response) => {
         where: {
           userId: req.userId,
           goalId: goal.id,
-          status: { in: ["PENDING"] },
+          status: "PENDING",
         },
-        orderBy: { effort: "desc" },
+        orderBy: [
+          { impact: "desc" },
+          { effort: "asc" },
+        ],
       });
 
       for (const task of tasks) {
-        // Check if task fits in available time (effort approximates minutes)
-        const effortMinutes = task.effort || 30;
+        const effortMinutes = task.effort ?? 30;
 
         if (effortMinutes <= availableMinutes) {
-          bestTask = task as any;
-          bestGoal = goal as any;
+          bestTask = task;
+          bestGoal = goal;
+          selectionReason = `Selected from goal "${goal.title}" (priority ${goal.importance}/100) because it has the highest impact and fits your ${availableMinutes} min window.`;
           break;
+        } else {
+          skippedTasks++;
         }
       }
 
       if (bestTask) break;
     }
 
-    // If no task found in goals, check inbox tasks
+    // Fall back to inbox tasks
     if (!bestTask) {
       const inboxTask = await prisma.task.findFirst({
         where: {
           userId: req.userId,
           goalId: null,
-          status: { in: ["PENDING"] },
+          status: "PENDING",
         },
-        orderBy: { effort: "desc" },
+        orderBy: [
+          { impact: "desc" },
+          { effort: "asc" },
+        ],
       });
 
       if (inboxTask) {
-        bestTask = inboxTask as any;
+        const effortMinutes = inboxTask.effort ?? 30;
+        if (effortMinutes <= availableMinutes) {
+          bestTask = inboxTask;
+          selectionReason = `Pulled from inbox because goal tasks exceed your ${availableMinutes} min window (${skippedTasks} tasks too long).`;
+        } else {
+          selectionReason = `This inbox task slightly exceeds your time but is the shortest available option.`;
+          bestTask = inboxTask;
+        }
       }
     }
 
@@ -97,21 +178,31 @@ decisionRouter.get("/next", async (req: Request, res: Response) => {
         ok: true,
         data: {
           recommendation: null,
-          message: "No tasks available. Add tasks to get recommendations.",
+          message: `No tasks fit your ${availableMinutes} min window. Consider extending time or breaking down large tasks.`,
+          inputs,
         },
       });
     }
 
-    // Build explanation
-    let explanation = "";
-    if (bestGoal) {
-      explanation = `You have ${availableMinutes} minutes available with ${energyLevel} energy. This task supports your goal "${bestGoal.title}" (importance: ${bestGoal.importance}/100).`;
+    // Build comprehensive reasoning
+    const reasoningParts: string[] = [];
+
+    // Context summary
+    if (!contextSet) {
+      reasoningParts.push(`⚠️ No context set today. Using defaults: ${availableMinutes} min, ${energyLevel} energy.`);
     } else {
-      explanation = `You have ${availableMinutes} minutes available. This inbox task fits your schedule.`;
+      reasoningParts.push(`📊 Today's context: ${availableMinutes} min available, ${energyLevel} energy${stressLevel > 7 ? ', HIGH stress' : ''}.`);
     }
 
-    if (stressLevel && stressLevel > 7) {
-      explanation += ` Note: Stress is high, consider a lighter task.`;
+    // Selection reason
+    reasoningParts.push(selectionReason);
+
+    // Energy-based advice
+    if (energyLevel === "LOW" && (bestTask.effort ?? 0) > 60) {
+      reasoningParts.push(`💡 Tip: This is a longer task. Consider breaking it into smaller chunks given your low energy.`);
+    }
+    if (stressLevel > 7) {
+      reasoningParts.push(`🧘 Stress is high. Focus on completing just this one task to build momentum.`);
     }
 
     res.json({
@@ -121,15 +212,17 @@ decisionRouter.get("/next", async (req: Request, res: Response) => {
           taskId: bestTask.id,
           taskTitle: bestTask.title,
           taskDescription: bestTask.description,
-          goalTitle: bestGoal?.title,
+          goalTitle: bestGoal?.title ?? null,
+          goalImportance: bestGoal?.importance ?? null,
           effort: bestTask.effort,
           impact: bestTask.impact,
-          reasoning: explanation,
+          reasoning: reasoningParts.join(" "),
         },
+        inputs,
       },
     });
   } catch (error) {
-    console.error(error);
+    logger.error('Decision engine failed', error as Error, { userId: req.userId });
     throw new AppError(500, "internal_error", "Failed to generate recommendation");
   }
 });

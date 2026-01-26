@@ -146,9 +146,8 @@
   - Logout button
   - Mobile-friendly layout
 
-- ✅ `frontend/components/protected-layout.tsx` (40 lines)
-  - Auth guard wrapper
-  - Redirect to /login if not authenticated
+- ✅ `frontend/app/(protected)/layout.tsx` (auth + layout)
+  - Auth guard (redirect to /login)
   - Prevent render until hydrated
   - Loading state during auth check
 
@@ -200,7 +199,7 @@
   - What's been built
   - File-by-file overview
   - Key design decisions
-  - What's ready vs TODO
+  - What's ready vs next
   - Code quality standards
   - Production checklist
   - Recruiter talking points
@@ -208,7 +207,7 @@
 - ✅ `FILE_STRUCTURE.md` (300+ lines)
   - Complete file tree
   - File count & LOC
-  - What's complete vs TODO
+  - What's complete vs next
   - Development workflow
   - Environment variables
   - Dependencies list
@@ -474,7 +473,7 @@ You can run this code immediately.
 → Read `FILE_STRUCTURE.md` (database diagram)
 
 **Want to know what's left to build?**  
-→ Read `BUILD_SUMMARY.md` or `FILE_STRUCTURE.md` (TODO sections)
+→ Read `BUILD_SUMMARY.md` or `FILE_STRUCTURE.md` (Next sections)
 
 **Want to set up locally?**  
 → Read `README.md` (Quick Start)

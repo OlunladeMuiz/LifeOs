@@ -122,6 +122,9 @@
 - [x] `frontend/app/layout.tsx` — Root layout
 - [x] `frontend/app/globals.css` — Global styles
 
+**Protected Area**
+- [x] `frontend/app/(protected)/layout.tsx` — Auth guard + app layout
+
 **Libraries** (2 files)
 - [x] `frontend/lib/api.ts` — API client
 - [x] `frontend/lib/auth-context.tsx` — Auth provider
@@ -129,9 +132,8 @@
 **Components** (7 files)
 - [x] `frontend/components/today-screen.tsx` — Task recommendation
 - [x] `frontend/components/app-layout.tsx` — Navigation layout
-- [x] `frontend/components/protected-layout.tsx` — Auth guard
 - [x] `frontend/components/error-boundary.tsx` — Error handling
-- [x] Components for remaining screens (TODO, but all templates ready)
+- [x] Components for remaining screens (templates ready)
 
 **Config** (3 files)
 - [x] `frontend/package.json` — Dependencies
@@ -350,7 +352,7 @@ This person can:
 - [x] Trace a request end-to-end
 
 ### Hour 3
-- [x] Identify TODO items
+- [x] Identify follow-ups
 - [x] Pick a screen to build
 - [x] Start implementing
 

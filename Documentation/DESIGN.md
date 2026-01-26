@@ -902,7 +902,7 @@ HistoryScreen
 - `frontend/lib/api.ts` — API client with token management
 - `frontend/lib/auth-context.tsx` — Auth provider & hook
 - `frontend/components/error-boundary.tsx` — Error boundary
-- `frontend/components/protected-layout.tsx` — Protected route wrapper
+- `frontend/app/(protected)/layout.tsx` — Protected route layout
 - `frontend/components/app-layout.tsx` — Bottom tab navigation
 - `frontend/components/today-screen.tsx` — Today/home screen
 - `frontend/app/page.tsx` — Home page

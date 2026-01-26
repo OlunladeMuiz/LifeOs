@@ -382,7 +382,7 @@ List tasks for authenticated user with optional filtering.
       },
       {
         "id": "task-uuid-2",
-        "title": "Build todo app",
+        "title": "Build a small sample app",
         "description": null,
         "effort": 180,
         "impact": 85,

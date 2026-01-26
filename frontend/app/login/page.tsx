@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useAuth } from '@/lib/auth-context';
+import { useAuth, mapAuthError } from '@/lib/auth-context';
 import { useRouter } from 'next/navigation';
+import { logger } from '@/lib/logger';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -12,7 +13,7 @@ export default function LoginPage() {
   const [isRegister, setIsRegister] = useState(false);
   const [mounted, setMounted] = useState(false);
 
-  const { login, register, user } = useAuth();
+  const { login, register, user, isLoading: authLoading, backendOnline } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -20,44 +21,64 @@ export default function LoginPage() {
   }, []);
 
   useEffect(() => {
-    if (mounted && user) {
+    if (mounted && !authLoading && user) {
       router.push('/');
     }
-  }, [user, mounted, router]);
+  }, [user, authLoading, mounted, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (loading) return; // Prevent double-submit
+    
+    // Check backend before attempting auth
+    if (!backendOnline) {
+      setError('Cannot reach the server. Is the backend running?');
+      return;
+    }
+
     setLoading(true);
     setError('');
 
+    if (isRegister && password.length < 8) {
+      setError('Password must be at least 8 characters.');
+      setLoading(false);
+      return;
+    }
+
     try {
-      const success = isRegister
+      const { success, error: authError } = isRegister
         ? await register(email, password)
         : await login(email, password);
 
       if (success) {
         router.push('/');
       } else {
-        setError(
-          isRegister
-            ? 'Failed to register. Please check your email or try again.'
-            : 'Invalid email or password.'
-        );
+        setError(mapAuthError(authError, isRegister));
       }
     } catch (err) {
       setError('An unexpected error occurred. Please try again.');
-      console.error('Auth error:', err);
+      logger.error('Auth submission failed', err, { isRegister });
     } finally {
       setLoading(false);
     }
   };
 
-  if (!mounted) return null;
+  // Show loading while auth provider initializes
+  if (!mounted || authLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-white">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white flex items-center justify-center px-6">
       <div className="w-full max-w-md">
-        <h1 className="text-4xl font-semibold mb-2 text-center">LifeOS</h1>
+        <h1 className="text-4xl font-semibold mb-2 text-center text-gray-900">LifeOS</h1>
         <p className="text-gray-600 text-center mb-12">
           {isRegister ? 'Create your account' : 'Welcome back'}
         </p>
@@ -71,7 +92,8 @@ export default function LoginPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+              disabled={loading}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
               placeholder="you@example.com"
               required
             />
@@ -85,8 +107,10 @@ export default function LoginPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+              disabled={loading}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
               placeholder="••••••••"
+              minLength={8}
               required
             />
           </div>
@@ -114,11 +138,13 @@ export default function LoginPage() {
           </p>
           <button
             type="button"
+            disabled={loading}
             onClick={() => {
+              if (loading) return;
               setIsRegister(!isRegister);
               setError('');
             }}
-            className="text-blue-600 font-medium hover:text-blue-700"
+            className="text-blue-600 font-medium hover:text-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isRegister ? 'Sign in' : 'Create one'}
           </button>

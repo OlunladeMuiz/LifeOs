@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { logger } from '@/lib/logger';
 
 interface ErrorBoundaryProps {
   children: React.ReactNode;
@@ -25,7 +26,7 @@ export class ErrorBoundary extends React.Component<
   }
 
   componentDidCatch(error: Error) {
-    console.error('Error caught:', error);
+    logger.error('React error boundary caught error', error, { component: 'ErrorBoundary' });
   }
 
   render() {
@@ -33,9 +34,9 @@ export class ErrorBoundary extends React.Component<
       return (
         <div className="flex items-center justify-center min-h-screen bg-white">
           <div className="max-w-md w-full text-center">
-            <h1 className="text-3xl font-semibold mb-2">Something went wrong</h1>
+            <h1 className="text-3xl font-semibold mb-2">Oops! We hit a snag</h1>
             <p className="text-gray-600 mb-6">
-              An unexpected error occurred. Please refresh the page.
+              The page encountered an error. Your data is safe—just refresh to continue.
             </p>
             <button
               onClick={() => window.location.reload()}

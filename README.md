@@ -252,6 +252,8 @@ npm run dev
 
 ## First Run
 
+Want a guided walkthrough? Use the 5-minute demo script: `Documentation/DEMO_SCRIPT.md`.
+
 1. **Register**: Create account with any email/password
 2. **Create Goal**: Goals tab → Create goal "Learn TypeScript" (priority 85)
 3. **Create Task**: Inbox tab → Create task "Read handbook" (45 min, linked to goal)

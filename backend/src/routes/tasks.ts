@@ -11,6 +11,7 @@ const CreateTaskSchema = z.object({
   effort: z.number().min(1).default(50),
   impact: z.number().min(1).default(50),
   goalId: z.string().optional(),
+  status: z.enum(["PENDING", "DONE", "SNOOZED"]).optional(),
 });
 
 const UpdateTaskSchema = z.object({
@@ -39,6 +40,11 @@ tasksRouter.get("/", async (req: Request, res: Response) => {
 
     const tasks = await prisma.task.findMany({
       where,
+      include: {
+        goal: {
+          select: { title: true },
+        },
+      },
       orderBy: { effort: "desc" },
     });
 
@@ -51,7 +57,7 @@ tasksRouter.get("/", async (req: Request, res: Response) => {
 // Create task
 tasksRouter.post("/", async (req: Request, res: Response) => {
   try {
-    const { title, description, effort, impact, goalId } =
+    const { title, description, effort, impact, goalId, status } =
       CreateTaskSchema.parse(req.body);
 
     const task = await prisma.task.create({
@@ -62,6 +68,7 @@ tasksRouter.post("/", async (req: Request, res: Response) => {
         effort,
         impact,
         goalId,
+        status: status || "PENDING",
       },
     });
 

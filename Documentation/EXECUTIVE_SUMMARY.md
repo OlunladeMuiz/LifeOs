@@ -150,7 +150,7 @@ Result: "Task X from Goal Y. Why: You have 120 min, high energy,
 - Responsive layout + navigation
 - TypeScript throughout
 
-### What's TODO (2-3 hours)
+### What's Next (2-3 hours)
 - Inbox screen (task list with filters)
 - Goals screen (CRUD + lifecycle)
 - Context screen (daily form)
@@ -333,7 +333,7 @@ This project demonstrates:
 
 ## What Makes This Different
 
-### Not Just a TODO App
+### Not Just a Task App
 - Has a decision algorithm
 - Max 3 goal constraint
 - Daily context integration

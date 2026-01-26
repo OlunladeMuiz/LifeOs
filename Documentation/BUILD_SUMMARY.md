@@ -138,7 +138,7 @@ Example: Today screen has:
 - `frontend/lib/api.ts` — API client with token refresh
 - `frontend/lib/auth-context.tsx` — Auth provider & hooks
 - `frontend/components/error-boundary.tsx` — Error fallback
-- `frontend/components/protected-layout.tsx` — Auth guard
+- `frontend/app/(protected)/layout.tsx` — Auth guard + app layout
 - `frontend/components/app-layout.tsx` — Bottom navigation
 - `frontend/components/today-screen.tsx` — Task recommendation screen
 - `frontend/app/page.tsx` — Home page (Today screen)

@@ -27,13 +27,13 @@ lifeos/
 │   │   ├── login/
 │   │   │   └── page.tsx                  # Login/register page
 │   │   ├── inbox/
-│   │   │   └── page.tsx                  # Inbox screen (TODO)
+│   │   │   └── page.tsx                  # Inbox screen
 │   │   ├── goals/
-│   │   │   └── page.tsx                  # Goals screen (TODO)
+│   │   │   └── page.tsx                  # Goals screen
 │   │   ├── context/
-│   │   │   └── page.tsx                  # Context screen (TODO)
+│   │   │   └── page.tsx                  # Context screen
 │   │   ├── history/
-│   │   │   └── page.tsx                  # History screen (TODO)
+│   │   │   └── page.tsx                  # History screen
 │   │   ├── layout.tsx                    # Root layout
 │   │   └── globals.css                   # Global styles (Tailwind)
 │   ├── lib/
@@ -41,13 +41,12 @@ lifeos/
 │   │   └── auth-context.tsx              # Auth provider & hooks
 │   ├── components/
 │   │   ├── error-boundary.tsx            # Error fallback UI
-│   │   ├── protected-layout.tsx          # Auth guard wrapper
 │   │   ├── app-layout.tsx                # Layout + bottom nav
 │   │   ├── today-screen.tsx              # Task recommendation (complete)
-│   │   ├── inbox-screen.tsx              # Task list (TODO)
-│   │   ├── goals-screen.tsx              # Goal management (TODO)
-│   │   ├── context-screen.tsx            # Context form (TODO)
-│   │   └── history-screen.tsx            # Completed tasks (TODO)
+│   │   ├── inbox-screen.tsx              # Task list (planned)
+│   │   ├── goals-screen.tsx              # Goal management (planned)
+│   │   ├── context-screen.tsx            # Context form (planned)
+│   │   └── history-screen.tsx            # Completed tasks (planned)
 │   ├── public/
 │   │   └── *.svg, *.ico                  # Static assets
 │   ├── package.json                      # Dependencies
@@ -87,7 +86,6 @@ lifeos/
 - `api.ts`: ~150 lines (API client + token management)
 - `auth-context.tsx`: ~60 lines (auth provider)
 - `today-screen.tsx`: ~200 lines (complete screen)
-- `protected-layout.tsx`: ~40 lines (auth guard)
 - `app-layout.tsx`: ~70 lines (layout + nav)
 - `error-boundary.tsx`: ~50 lines (error fallback)
 - `login/page.tsx`: ~100 lines (complete)
@@ -130,7 +128,7 @@ lifeos/
 
 ---
 
-## What's TODO (2-3 hours of work)
+## What's Next (2-3 hours of work)
 
 ### Frontend Screens (Copy Today Pattern)
 - [ ] Inbox screen (task list + filters)
@@ -358,7 +356,7 @@ NEXT_PUBLIC_API_URL=http://localhost:3001/api
 ✅ Environment variables for secrets
 ✅ HTTPS ready (no hardcoded URLs)
 
-TODO:
+Next (hardening):
 - [ ] Rate limiting
 - [ ] CSRF protection (if needed)
 - [ ] Input sanitization (in addition to validation)
