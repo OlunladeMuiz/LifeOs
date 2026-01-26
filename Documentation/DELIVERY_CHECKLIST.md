@@ -207,7 +207,7 @@ npm install
 cp .env.local.example .env.local
 npm run dev
 
-# Open http://localhost:3000
+# Open http://127.0.0.1:3000
 ```
 
 ### 2. Test (10 minutes)

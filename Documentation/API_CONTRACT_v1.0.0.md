@@ -1,7 +1,7 @@
 # LifeOS API Contract v1.0.0
 **Frozen Release Date:** January 10, 2026  
 **Status:** STABLE - Breaking changes require major version bump  
-**Base URL:** `http://localhost:3001/api` (dev) | `https://api.lifeos.io` (prod)  
+**Base URL:** `http://127.0.0.1:3001/api` (dev) | `https://api.lifeos.io` (prod)  
 
 ---
 

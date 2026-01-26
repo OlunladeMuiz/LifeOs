@@ -32,7 +32,7 @@ cd frontend && npm install && cp .env.local.example .env.local && npm run dev
 
 ### 3. Test (10 minutes)
 ```bash
-# In browser: http://localhost:3000
+# In browser: http://127.0.0.1:3000
 # Register: test@lifeos.local / TestPassword123
 # Login → See "No tasks available"
 

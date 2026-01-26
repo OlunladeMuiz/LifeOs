@@ -15,13 +15,13 @@ npm install
 cp .env.example .env  # Add DATABASE_URL
 npx prisma migrate deploy
 npm run dev
-# → http://localhost:3001
+# → http://127.0.0.1:3001
 
 # Terminal 2: Frontend
 cd frontend
 npm install
 npm run dev
-# → http://localhost:3002
+# → http://127.0.0.1:3002
 ```
 
 ### Environment Variables
@@ -38,7 +38,7 @@ LOG_LEVEL=debug                       # debug | info | warn | error
 
 **Frontend (.env.local)**:
 ```
-NEXT_PUBLIC_API_URL=http://localhost:3001/api
+NEXT_PUBLIC_API_URL=http://127.0.0.1:3001/api
 ```
 
 ---

@@ -6,7 +6,7 @@ Goal: show that LifeOS is a *decision system*, not a task list.
 
 - Start backend: `cd backend && npm run dev`
 - Start frontend: `cd frontend && npm run dev`
-- Open: http://localhost:3000
+- Open: http://127.0.0.1:3000
 
 If the UI shows “Backend is offline”, you can say:
 - “The UI fails calmly and tells you exactly what to do: start the API server.”

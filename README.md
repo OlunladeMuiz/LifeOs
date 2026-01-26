@@ -178,7 +178,7 @@ npx prisma migrate dev
 npm run dev
 ```
 
-**Backend runs on:** http://localhost:3001
+**Backend runs on:** http://127.0.0.1:3001
 
 ### Frontend
 
@@ -190,7 +190,7 @@ cp .env.local.example .env.local
 npm run dev
 ```
 
-**Frontend runs on:** http://localhost:3000
+**Frontend runs on:** http://127.0.0.1:3000
 
 ```
 Frontend (Next.js + React)
@@ -222,7 +222,7 @@ npm install
 cp .env.example .env
 
 # Edit .env — add your PostgreSQL URL:
-# DATABASE_URL="postgresql://user:pass@localhost:5432/lifeos"
+# DATABASE_URL="postgresql://user:pass@127.0.0.1:5432/lifeos"
 # JWT_SECRET="any-random-string"
 # JWT_REFRESH_SECRET="any-random-string"
 
@@ -245,7 +245,7 @@ cp .env.local.example .env.local
 
 # Start
 npm run dev
-# Open http://localhost:3000
+# Open http://127.0.0.1:3000
 ```
 
 ---

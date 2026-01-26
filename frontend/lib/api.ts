@@ -18,12 +18,12 @@ import type {
 	DecisionResponse,
 } from './api-types';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 // Warn developers if API URL looks misconfigured
 if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
 	if (!process.env.NEXT_PUBLIC_API_URL) {
-		logger.warn('NEXT_PUBLIC_API_URL not set, using default http://localhost:3001/api');
+		logger.warn('NEXT_PUBLIC_API_URL not set. Configure it in .env.local.');
 	}
 }
 
@@ -137,6 +137,14 @@ class ApiClient {
 		data?: unknown,
 		attemptedRefresh = false
 	): Promise<ApiResponse<T>> {
+		if (!API_URL) {
+			return {
+				ok: false,
+				error: 'network_error',
+				message: 'API URL is not configured. Set NEXT_PUBLIC_API_URL.',
+			};
+		}
+
 		logger.api(method, endpoint, data ? { hasBody: true } : undefined);
 		
 		try {

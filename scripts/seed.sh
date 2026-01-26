@@ -4,7 +4,7 @@
 # Run this after database is set up to populate with example data
 # Usage: bash seed.sh
 
-API="http://localhost:3001/api"
+API="http://127.0.0.1:3001/api"
 
 # Color codes
 GREEN='\033[0;32m'
@@ -236,7 +236,7 @@ echo "  Password: TestPassword123"
 echo ""
 echo "Next steps:"
 echo "  1. Start frontend: cd frontend && npm run dev"
-echo "  2. Open http://localhost:3000"
+echo "  2. Open http://127.0.0.1:3000"
 echo "  3. Login with test credentials"
 echo "  4. Click 'Today' to see recommendation"
 echo ""

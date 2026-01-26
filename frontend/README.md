@@ -17,7 +17,7 @@ For the broader product philosophy and architecture, start at the repo root: `..
 
 Prereqs:
 
-- Backend running at `NEXT_PUBLIC_API_URL` (default: `http://localhost:3001/api`)
+- Backend running at `NEXT_PUBLIC_API_URL` (e.g. `http://127.0.0.1:3001/api`)
 
 ```bash
 cd frontend
@@ -26,7 +26,7 @@ cp .env.local.example .env.local
 npm run dev
 ```
 
-Open http://localhost:3000
+Open http://127.0.0.1:3000
 
 ## 5-minute demo
 

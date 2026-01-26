@@ -169,7 +169,7 @@ cp .env.local.example .env.local
 npm run dev
 
 # Verify
-# Open http://localhost:3000
+# Open http://127.0.0.1:3000
 # Register test account
 # Login should work
 ```
@@ -213,14 +213,14 @@ bash scripts/seed.sh
 ### Backend `.env`
 ```
 PORT=3001
-DATABASE_URL="postgresql://user:pass@localhost:5432/lifeos"
+DATABASE_URL="postgresql://user:pass@127.0.0.1:5432/lifeos"
 JWT_SECRET="your-super-secret-key"
 JWT_REFRESH_SECRET="your-refresh-secret-key"
 ```
 
 ### Frontend `.env.local`
 ```
-NEXT_PUBLIC_API_URL=http://localhost:3001/api
+NEXT_PUBLIC_API_URL=http://127.0.0.1:3001/api
 ```
 
 ---

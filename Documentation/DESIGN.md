@@ -1024,7 +1024,7 @@ Backend updates → Frontend refreshes recommendation
    ```
 
 3. **Verify Integration**
-   - Open http://localhost:3000
+  - Open http://127.0.0.1:3000
    - Should see LifeOS login page
    - Click "Create one"
    - Register with test email
@@ -1093,7 +1093,7 @@ Backend updates → Frontend refreshes recommendation
 2. **Check Frontend Console**:
    - Open DevTools (F12)
    - No TypeScript errors
-   - Network tab shows API calls to `http://localhost:3001/api/...`
+  - Network tab shows API calls to `http://127.0.0.1:3001/api/...`
 
 3. **Test Auth Flow**:
    - Register → should see tokens in localStorage

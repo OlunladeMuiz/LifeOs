@@ -296,7 +296,7 @@ npm run dev
 
 ### 3. Test the System
 ```bash
-# In browser: http://localhost:3000
+# In browser: http://127.0.0.1:3000
 # Register with test@lifeos.local / TestPassword123
 # Login
 # You'll see "No tasks available"

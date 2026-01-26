@@ -28,8 +28,19 @@ console.log("[BOOT] Environment loaded");
 const app = express();
 const PORT = Number(process.env.PORT) || 3001;
 
+const isProduction = process.env.NODE_ENV === 'production';
+const corsOrigins = (process.env.CORS_ORIGIN ?? process.env.FRONTEND_ORIGIN ?? '')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
 // Middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: corsOrigins.length ? corsOrigins : isProduction ? false : true,
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 // Health check with timestamp for diagnostics (support both /health and /api/health)
@@ -50,7 +61,7 @@ app.use("/api/decision", authMiddleware, decisionRouter);
 app.use(errorHandler);
 
 const server = app.listen(PORT, "0.0.0.0", () => {
-  console.log(`[BOOT] LifeOS Backend listening on http://localhost:${PORT}`);
+  console.log(`[BOOT] LifeOS Backend listening on port ${PORT}`);
   console.log(`[BOOT] Server is listening: ${server.listening}`);
   logger.info('LifeOS backend started', { port: PORT, env: process.env.NODE_ENV || 'development' });
 });
