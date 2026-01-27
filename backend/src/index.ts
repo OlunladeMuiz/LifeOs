@@ -28,16 +28,15 @@ console.log("[BOOT] Environment loaded");
 const app = express();
 const PORT = Number(process.env.PORT) || 3001;
 
-const isProduction = process.env.NODE_ENV === 'production';
-const corsOrigins = (process.env.CORS_ORIGIN ?? process.env.FRONTEND_ORIGIN ?? '')
-  .split(',')
-  .map((origin) => origin.trim())
-  .filter(Boolean);
-
 // Middleware
 app.use(
   cors({
-    origin: corsOrigins.length ? corsOrigins : isProduction ? false : true,
+    origin: [
+      "https://life-qzfihrrt6-olunlade-muizs-projects.vercel.app",
+      "https://lifeos.vercel.app",
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
 );
