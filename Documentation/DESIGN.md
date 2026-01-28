@@ -1079,7 +1079,7 @@ Backend updates → Frontend refreshes recommendation
 | `Port 3001 already in use` | Change PORT in .env, or kill existing process |
 | `NEXT_PUBLIC_API_URL not set` | Create `.env.local` with `NEXT_PUBLIC_API_URL=...` |
 | `JWT errors on login` | Ensure JWT_SECRET and JWT_REFRESH_SECRET in backend .env |
-| `CORS errors` | Backend already has `cors()` middleware, should be OK |
+| `CORS errors` | Backend CORS uses an explicit origin allowlist. Ensure your frontend origin (Vercel URL) matches exactly and that `NEXT_PUBLIC_API_URL` points to the backend `/api` base with no trailing slash. |
 | `Tokens not persisting` | Check localStorage is enabled in browser |
 | `API calls return 404` | Ensure backend is running on correct port |
 

@@ -28,6 +28,20 @@ npm run dev
 
 Open http://127.0.0.1:3000
 
+## Deploy (Vercel)
+
+Set `NEXT_PUBLIC_API_URL` in your Vercel project to your backend base URL **including** `/api`.
+
+Examples:
+
+- Local dev: `http://127.0.0.1:3001/api`
+- Railway: `https://<your-railway-service>.up.railway.app/api`
+
+Notes:
+
+- The URL must not have a trailing slash (use `/api`, not `/api/`).
+- If you change your Vercel domain/preview URL, the backend CORS allowlist must include the exact origin.
+
 ## 5-minute demo
 
 See `../Documentation/DEMO_SCRIPT.md`.

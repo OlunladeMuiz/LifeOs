@@ -26,6 +26,7 @@ dotenv.config();
 console.log("[BOOT] Environment loaded");
 
 const app = express();
+app.set("trust proxy", 1);
 const PORT = Number(process.env.PORT) || 3001;
 
 // Middleware
@@ -33,7 +34,7 @@ app.use(
   cors({
     origin: [
       "https://life-qzfihrrt6-olunlade-muizs-projects.vercel.app",
-      "https://lifeos.vercel.app",
+      "https://lifeos.vercel.app", // optional future prod domain
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -41,6 +42,8 @@ app.use(
   })
 );
 app.use(express.json());
+
+app.options("*", cors());
 
 // Health check with timestamp for diagnostics (support both /health and /api/health)
 app.get(["/health", "/api/health"], (req, res) => {

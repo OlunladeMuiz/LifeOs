@@ -21,7 +21,7 @@ npm run dev
 cd frontend
 npm install
 npm run dev
-# → http://127.0.0.1:3002
+# → http://127.0.0.1:3000
 ```
 
 ### Environment Variables
@@ -40,6 +40,11 @@ LOG_LEVEL=debug                       # debug | info | warn | error
 ```
 NEXT_PUBLIC_API_URL=http://127.0.0.1:3001/api
 ```
+
+For Vercel deployments, set `NEXT_PUBLIC_API_URL` in the Vercel project settings to your backend base URL (e.g. `https://<your-railway-service>.up.railway.app/api`).
+
+- Must include `/api`
+- Must not have a trailing slash (`/api`, not `/api/`)
 
 ---
 
