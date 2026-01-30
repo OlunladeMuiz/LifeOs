@@ -29,15 +29,35 @@ const app = express();
 app.set("trust proxy", 1);
 const PORT = Number(process.env.PORT) || 3001;
 
+// Allowed origins for CORS
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://127.0.0.1:3000",
+  // Add your production Vercel domains
+  "https://lifeos.vercel.app",
+  "https://life-os.vercel.app",
+];
+
+// Also allow Vercel preview deployments dynamically
+const isAllowedOrigin = (origin: string | undefined): boolean => {
+  if (!origin) return true; // Allow requests with no origin (like mobile apps or curl)
+  if (allowedOrigins.includes(origin)) return true;
+  // Allow all Vercel preview deployments for your project
+  if (origin.includes('olunlade-muizs-projects.vercel.app')) return true;
+  if (origin.includes('lifeos') && origin.includes('vercel.app')) return true;
+  return false;
+};
+
 // Middleware
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",
-      "http://127.0.0.1:3000",
-      "https://life-qzfihrrt6-olunlade-muizs-projects.vercel.app",
-      "https://lifeos.vercel.app", // optional future prod domain
-    ],
+    origin: (origin, callback) => {
+      if (isAllowedOrigin(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
