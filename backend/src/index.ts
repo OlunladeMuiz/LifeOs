@@ -55,9 +55,11 @@ const isAllowedOrigin = (origin: string | undefined): boolean => {
 };
 
 // Middleware
+
+
 app.use(
   cors({
-    origin: (origin, callback) => {
+    origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
       if (isAllowedOrigin(origin)) {
         callback(null, true);
       } else {
