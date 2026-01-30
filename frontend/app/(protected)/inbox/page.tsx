@@ -105,10 +105,13 @@ export default function InboxPage() {
   };
 
   const handleStatusChange = async (id: string, status: TaskStatus) => {
+    console.log('handleStatusChange called:', { id, status });
     const res = await apiClient.updateTask(id, { status });
+    console.log('updateTask response:', res);
     if (res.ok) {
       loadData();
     } else {
+      console.error('Update failed:', res.message);
       setError(res.message || 'Update failed.');
     }
   };
@@ -290,8 +293,11 @@ function TaskRow({
   const [updating, setUpdating] = useState(false);
 
   const handleComplete = async () => {
+    console.log('handleComplete clicked, task:', task.id, 'current status:', task.status);
     setUpdating(true);
-    await onStatusChange(task.id, task.status === 'DONE' ? 'PENDING' : 'DONE');
+    const newStatus = task.status === 'DONE' ? 'PENDING' : 'DONE';
+    console.log('Changing to status:', newStatus);
+    await onStatusChange(task.id, newStatus);
     setUpdating(false);
   };
 
@@ -314,6 +320,7 @@ function TaskRow({
       <div className="flex items-start gap-3">
         {/* Checkbox */}
         <button
+          type="button"
           onClick={handleComplete}
           disabled={updating}
           className={`flex-shrink-0 w-5 h-5 mt-0.5 rounded border-2 flex items-center justify-center transition-colors ${

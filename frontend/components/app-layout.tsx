@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
+import { apiClient } from '@/lib/api';
 
 interface NavItem {
   label: string;
@@ -74,10 +75,22 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   };
 
   const handleComputePriorities = async () => {
+    console.log('handleComputePriorities clicked');
     setIsComputing(true);
-    // Navigate to today page which will reload priorities
-    router.push('/today');
-    setTimeout(() => setIsComputing(false), 1000);
+    try {
+      // Call the decision engine to compute priorities
+      console.log('Calling getNextTask...');
+      const result = await apiClient.getNextTask();
+      console.log('getNextTask result:', result);
+      // Navigate to today page to show the computed result
+      router.push('/today');
+      // Force a refresh to ensure the TodayScreen loads fresh data
+      router.refresh();
+    } catch (err) {
+      console.error('Failed to compute priorities:', err);
+    } finally {
+      setIsComputing(false);
+    }
   };
 
   const isActive = (href: string) => {
@@ -106,6 +119,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
             {/* Action Buttons */}
             <div className="flex items-center gap-3">
               <button
+                type="button"
                 onClick={handleComputePriorities}
                 disabled={isComputing}
                 className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
@@ -116,6 +130,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                 {isComputing ? 'Computing...' : 'Compute Priorities'}
               </button>
               <button
+                type="button"
                 onClick={handleLogout}
                 className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
               >

@@ -71,10 +71,13 @@ export default function GoalsPage() {
   };
 
   const handleUpdate = async (id: string, updates: Partial<Goal>) => {
+    console.log('handleUpdate called:', { id, updates });
     const res = await apiClient.updateGoal(id, updates);
+    console.log('updateGoal response:', res);
     if (res.ok) {
       loadGoals();
     } else {
+      console.error('Goal update failed:', res.message);
       setError(res.message || 'Update failed.');
     }
   };
@@ -211,8 +214,11 @@ function GoalCard({ goal, onUpdate }: { goal: Goal; onUpdate: (id: string, updat
   const [toggling, setToggling] = useState(false);
 
   const toggleStatus = async () => {
+    console.log('toggleStatus clicked, goal:', goal.id, 'current status:', goal.status);
     setToggling(true);
-    await onUpdate(goal.id, { status: goal.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE' });
+    const newStatus = goal.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
+    console.log('Changing goal to status:', newStatus);
+    await onUpdate(goal.id, { status: newStatus });
     setToggling(false);
   };
 
@@ -244,6 +250,7 @@ function GoalCard({ goal, onUpdate }: { goal: Goal; onUpdate: (id: string, updat
         </div>
         
         <button
+          type="button"
           onClick={toggleStatus}
           disabled={toggling}
           className={`flex-shrink-0 px-3 py-1.5 text-sm font-medium rounded-lg border transition-colors disabled:opacity-50 ${

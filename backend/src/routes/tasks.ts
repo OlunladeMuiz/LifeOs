@@ -25,7 +25,7 @@ const UpdateTaskSchema = z.object({
 // Valid status transitions
 const validTransitions: Record<string, string[]> = {
   PENDING: ["DONE", "SNOOZED"],
-  DONE: [],
+  DONE: ["PENDING"],  // Allow un-completing tasks
   SNOOZED: ["PENDING"],
 };
 
