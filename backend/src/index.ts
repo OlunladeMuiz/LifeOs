@@ -75,8 +75,8 @@ app.use(express.json());
 
 app.options("*", cors());
 
-// Health check with timestamp for diagnostics (support both /health and /api/health)
-app.get(["/health", "/api/health"], (req, res) => {
+// Health check with timestamp for diagnostics (support /health, /api/health, and /api/health/health)
+app.get(["/health", "/api/health", "/api/health/health"], (req, res) => {
   res.json({ ok: true, status: "ok", timestamp: new Date().toISOString() });
 });
 
