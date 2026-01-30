@@ -30,12 +30,17 @@ app.set("trust proxy", 1);
 const PORT = Number(process.env.PORT) || 3001;
 
 // Allowed origins for CORS
+
+// Allow origins from .env (CORS_ORIGIN), fallback to hardcoded list
+const envOrigins = process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(",").map(o => o.trim()).filter(Boolean) : [];
 const allowedOrigins = [
+  ...envOrigins,
   "http://localhost:3000",
   "http://127.0.0.1:3000",
   // Add your production Vercel domains
   "https://lifeos.vercel.app",
   "https://life-os.vercel.app",
+  "https://life-os-six-beryl.vercel.app",
 ];
 
 // Also allow Vercel preview deployments dynamically
@@ -45,6 +50,7 @@ const isAllowedOrigin = (origin: string | undefined): boolean => {
   // Allow all Vercel preview deployments for your project
   if (origin.includes('olunlade-muizs-projects.vercel.app')) return true;
   if (origin.includes('lifeos') && origin.includes('vercel.app')) return true;
+  if (origin.includes('life-os') && origin.includes('vercel.app')) return true;
   return false;
 };
 
