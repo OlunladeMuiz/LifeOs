@@ -1,3 +1,11 @@
+// Root route for base URL
+app.get("/", (req, res) => {
+  res.status(200).json({
+    message: "Welcome to the LifeOS API backend!",
+    status: "ok",
+    docs: "https://github.com/OlunladeMuiz/LifeOs"
+  });
+});
 // ==== CRITICAL: Error handlers FIRST (before any import can crash) ====
 process.on("uncaughtException", (err) => {
   console.error("[FATAL] Uncaught Exception:", err);
