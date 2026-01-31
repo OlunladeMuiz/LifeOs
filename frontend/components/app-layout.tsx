@@ -106,8 +106,8 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Header */}
       <header className="bg-white border-b border-gray-200">
-        <div className="max-w-6xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-2 sm:px-6 py-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0 w-full">
             {/* Logo and User */}
             <div>
               <h1 className="text-2xl font-bold text-gray-900">LifeOS</h1>
@@ -117,12 +117,12 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex items-center gap-3">
+            <div className="flex flex-col xs:flex-row items-stretch xs:items-center gap-2 xs:gap-3 w-full xs:w-auto">
               <button
                 type="button"
                 onClick={handleComputePriorities}
                 disabled={isComputing}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors w-full xs:w-auto"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -132,7 +132,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
               <button
                 type="button"
                 onClick={handleLogout}
-                className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors w-full xs:w-auto"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -144,13 +144,13 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
         </div>
 
         {/* Tab Navigation */}
-        <div className="max-w-6xl mx-auto px-6">
-          <nav className="flex">
+        <div className="max-w-6xl mx-auto px-2 sm:px-6 overflow-x-auto">
+          <nav className="flex flex-nowrap gap-2 min-w-0">
             {NAV_ITEMS.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`inline-flex items-center gap-2 px-5 py-3 text-sm font-medium border-b-2 transition-colors ${
+                className={`inline-flex items-center gap-2 px-5 py-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${
                   isActive(item.href)
                     ? 'border-gray-900 text-gray-900'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -165,7 +165,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 max-w-6xl mx-auto px-6 py-8 w-full">
+      <main className="flex-1 max-w-6xl mx-auto px-2 sm:px-6 py-8 w-full">
         {children}
       </main>
 
