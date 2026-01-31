@@ -107,43 +107,44 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
       {/* Header */}
       <header className="bg-white border-b border-gray-200">
         <div className="max-w-6xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between w-full">
-            {/* Logo and User */}
+          {/* Mobile only: email, buttons stacked */}
+          <div className="md:hidden">
+            <h1 className="text-2xl font-bold text-gray-900">LifeOS</h1>
+            {user && (
+              <div className="flex flex-col gap-3 mt-1">
+                <p className="text-sm text-gray-500">{user.email}</p>
+                <button
+                  type="button"
+                  onClick={handleComputePriorities}
+                  disabled={isComputing}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors w-full"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                  {isComputing ? 'Computing...' : 'Compute Priorities'}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors w-full"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                  </svg>
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
+          {/* Desktop only: original layout */}
+          <div className="hidden md:flex items-center justify-between w-full">
             <div>
               <h1 className="text-2xl font-bold text-gray-900">LifeOS</h1>
-              {user && (
-                <>
-                  <p className="text-sm text-gray-500">{user.email}</p>
-                  {/* Action Buttons below email on mobile only */}
-                  <div className="flex flex-col gap-3 mt-4 sm:hidden">
-                    <button
-                      type="button"
-                      onClick={handleComputePriorities}
-                      disabled={isComputing}
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors w-full"
-                    >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                      </svg>
-                      {isComputing ? 'Computing...' : 'Compute Priorities'}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleLogout}
-                      className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors w-full"
-                    >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                      </svg>
-                      Logout
-                    </button>
-                  </div>
-                </>
-              )}
+              {user && <p className="text-sm text-gray-500">{user.email}</p>}
             </div>
-            {/* Action Buttons on desktop (right side) */}
             {user && (
-              <div className="hidden sm:flex items-center gap-3 w-auto">
+              <div className="flex items-center gap-3 w-auto">
                 <button
                   type="button"
                   onClick={handleComputePriorities}
@@ -167,14 +168,14 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                 </button>
               </div>
             )}
-            {/* If not logged in, show nothing on right */}
             {!user && <div />}
           </div>
         </div>
 
         {/* Tab Navigation */}
-        <div className="max-w-6xl mx-auto px-6 sm:overflow-x-visible overflow-x-auto">
-          <nav className="flex flex-nowrap gap-2 min-w-0 sm:flex-row flex-row flex-wrap sm:flex-nowrap">
+        <div className="max-w-6xl mx-auto px-6">
+          {/* Mobile: nav row scrollable, no wrap; Desktop: original */}
+          <nav className="flex gap-2 min-w-0 overflow-x-auto whitespace-nowrap no-scrollbar md:overflow-x-visible md:whitespace-normal">
             {NAV_ITEMS.map((item) => (
               <Link
                 key={item.href}
@@ -194,7 +195,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 max-w-6xl mx-auto px-6 py-8 w-full">
+      <main className="flex-1 max-w-6xl mx-auto px-6 py-8 w-full overflow-x-hidden">
         {children}
       </main>
 
