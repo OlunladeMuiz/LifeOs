@@ -144,8 +144,8 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
         </div>
 
         {/* Tab Navigation */}
-        <div className="max-w-6xl mx-auto px-6 overflow-x-auto">
-          <nav className="flex flex-nowrap gap-2 min-w-0">
+        <div className="max-w-6xl mx-auto px-6 sm:overflow-x-visible overflow-x-auto">
+          <nav className="flex flex-nowrap gap-2 min-w-0 sm:flex-row flex-row flex-wrap sm:flex-nowrap">
             {NAV_ITEMS.map((item) => (
               <Link
                 key={item.href}
